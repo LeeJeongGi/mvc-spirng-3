@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -52,11 +53,14 @@ public class BasicItemController {
     }
 
     @PostMapping("/add")
-    public String addItemV1(@ModelAttribute Item item) {
+    public String addItemV1(@ModelAttribute Item item, RedirectAttributes redirectAttributes) {
 
-        itemRepository.save(item);
+        Item savedItem = itemRepository.save(item);
 
-        return "basic/item";
+        redirectAttributes.addAttribute("itemId", savedItem.getId());
+        redirectAttributes.addAttribute("status", true);
+
+        return "redirect:/basic/items/{itemId}";
     }
 
     @GetMapping("/{itemId}/edit")
